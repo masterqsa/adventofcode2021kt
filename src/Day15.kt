@@ -1,35 +1,10 @@
 import java.lang.Math
 import java.lang.Math.*
 import java.util.*
+import java.util.PriorityQueue
 
 fun main() {
     fun part1(input: List<String>): Int {
-        fun navigate(m: Array<Array<Int>>, dp: Array<Array<Int>>, x: Int, y: Int): Unit {
-            if (x > 0) {
-                if (m[x-1][y] + dp[x][y] < dp[x-1][y]) {
-                    dp[x - 1][y] = m[x - 1][y] + dp[x][y]
-                    navigate(m, dp, x-1, y)
-                }
-            }
-            if (x < m.size-1) {
-                if (m[x+1][y] + dp[x][y] < dp[x+1][y]) {
-                    dp[x + 1][y] = m[x + 1][y] + dp[x][y]
-                    navigate(m, dp, x+1, y)
-                }
-            }
-            if (y > 0) {
-                if (m[x][y-1] + dp[x][y] < dp[x][y-1]) {
-                    dp[x][y-1] = m[x][y-1] + dp[x][y]
-                    navigate(m, dp, x, y-1)
-                }
-            }
-            if (y < m.size-1) {
-                if (m[x][y+1] + dp[x][y] < dp[x][y+1]) {
-                    dp[x][y+1] = m[x][y+1] + dp[x][y]
-                    navigate(m, dp, x, y+1)
-                }
-            }
-        }
         var m = Array<Array<Int>>(input.size) { Array<Int>(input.size) { 0 } }
         for(y in input.indices) {
             for(x in input[y].indices) {
@@ -39,7 +14,23 @@ fun main() {
 
         var dp = Array<Array<Int>>(input.size) { Array<Int>(input.size) { 10000 } }
         dp[0][0] = 0
-        navigate(m, dp, 0, 0)
+        val compare: Comparator<Pair<Int, Pair<Int, Int>>> = compareBy { it.first }
+        var q = PriorityQueue(compare)
+        q.add(Pair(0, Pair(0, 0)))
+        dp[0][0] = 0
+        while(!q.isEmpty()) {
+            var p = q.remove().second
+            var x = p.first
+            var y = p.second
+            for((nx, ny) in listOf(Pair(x-1,y),Pair(x+1,y),Pair(x,y-1),Pair(x,y+1))) {
+                if (nx >= 0 && nx < m.size && ny >= 0 && ny < m.size) {
+                    if (m[nx][ny] + dp[x][y] < dp[nx][ny]) {
+                        dp[nx][ny] = m[nx][ny] + dp[x][y]
+                        q.add(Pair(dp[nx][ny], Pair(nx, ny)))
+                    }
+                }
+            }
+        }
         return dp[dp.size-1][dp.size-1]
     }
 
@@ -57,32 +48,7 @@ fun main() {
             mem[x][y] = s
             return s
         }
-        fun navigate(mem: Array<Array<Int>>,m: Array<Array<Int>>, dp: Array<Array<Int>>, x: Int, y: Int): Unit {
-            if (x > 0) {
-                if (risk(mem,m, x-1,y) + dp[x][y] < dp[x-1][y]) {
-                    dp[x - 1][y] = risk(mem,m, x - 1,y) + dp[x][y]
-                    navigate(mem,m, dp, x-1, y)
-                }
-            }
-            if (x < 5*m.size-1) {
-                if (risk(mem,m,x+1,y) + dp[x][y] < dp[x+1][y]) {
-                    dp[x + 1][y] = risk(mem,m, x + 1,y) + dp[x][y]
-                    navigate(mem,m, dp, x+1, y)
-                }
-            }
-            if (y > 0) {
-                if (risk(mem,m,x,y-1) + dp[x][y] < dp[x][y-1]) {
-                    dp[x][y-1] = risk(mem,m,x,y-1) + dp[x][y]
-                    navigate(mem,m, dp, x, y-1)
-                }
-            }
-            if (y < 5*m.size-1) {
-                if (risk(mem,m,x,y+1) + dp[x][y] < dp[x][y+1]) {
-                    dp[x][y+1] = risk(mem,m,x,y+1) + dp[x][y]
-                    navigate(mem,m, dp, x, y+1)
-                }
-            }
-        }
+
         var m = Array<Array<Int>>(input.size) { Array<Int>(input.size) { 0 } }
         var mem = Array<Array<Int>>(5*input.size) { Array<Int>(5*input.size) { 0 } }
         for(y in input.indices) {
@@ -92,8 +58,23 @@ fun main() {
         }
 
         var dp = Array<Array<Int>>(5*input.size) { Array<Int>(5*input.size) { 10000 } }
+        val compare: Comparator<Pair<Int, Pair<Int, Int>>> = compareBy { it.first }
+        var q = PriorityQueue(compare)
+        q.add(Pair(0, Pair(0, 0)))
         dp[0][0] = 0
-        navigate(mem,m, dp, 0, 0)
+        while(!q.isEmpty()) {
+            var p = q.remove().second
+            var x = p.first
+            var y = p.second
+            for((nx, ny) in listOf(Pair(x-1,y),Pair(x+1,y),Pair(x,y-1),Pair(x,y+1))) {
+                if (nx >= 0 && nx < 5*m.size && ny >= 0 && ny < 5*m.size) {
+                    if (risk(mem,m, nx,ny) + dp[x][y] < dp[nx][ny]) {
+                        dp[nx][ny] = risk(mem,m, nx,ny) + dp[x][y]
+                        q.add(Pair(dp[nx][ny], Pair(nx, ny)))
+                    }
+                }
+            }
+        }
         return dp[dp.size-1][dp.size-1]
     }
 
