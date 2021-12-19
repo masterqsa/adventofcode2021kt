@@ -189,19 +189,16 @@ fun main() {
             unidentified.removeAll(newIdentified)
         }
 
-        var beaconsSet = mutableSetOf<Int>()
         var beaconCoordSet = mutableSetOf<String>()
         for(s in sensors) {
             for(b in s.beacons) {
-                beaconsSet.add(b.id)
                 var o = b.applyOffset(s.offset!!)
                 beaconCoordSet.add(o.dx.toString()+","+o.dy.toString()+","+o.dz.toString())
             }
         }
         println("unidentified sensors: " + unidentified.count())
-        beaconsCount = beaconsSet.size
         println("coords set count:" + beaconCoordSet.count())
-        return beaconsCount
+        return beaconCoordSet.count()
     }
 
 
