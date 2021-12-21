@@ -30,7 +30,7 @@ fun main() {
         var offset = 2
         var rules = input[0].toCharArray()
         var size = input.size-2 + offset * 2
-        var map = Array<Array<Boolean>>(size) { Array<Boolean>(size) { false } }
+        var map = Array(size) { Array(size) { false } }
         for(i in 2 until input.size) {
             for(j in input[i].indices) {
                 map[offset+i-2][offset+j] = (input[i][j] == '#')
@@ -40,10 +40,10 @@ fun main() {
         var bg = false
         for(s in 1..2) {
             map = transform(map, rules, bg)
-            if (bg) {
-                bg = rules[511] == '#'
+            bg = if (bg) {
+                rules[511] == '#'
             } else {
-                bg = rules[0] == '#'
+                rules[0] == '#'
             }
         }
 
@@ -83,7 +83,7 @@ fun main() {
         var offset = 50
         var rules = input[0].toCharArray()
         var size = input.size-2 + offset * 2
-        var map = Array<Array<Boolean>>(size) { Array<Boolean>(size) { false } }
+        var map = Array(size) { Array(size) { false } }
         for(i in 2 until input.size) {
             for(j in input[i].indices) {
                 map[offset+i-2][offset+j] = (input[i][j] == '#')
@@ -93,10 +93,10 @@ fun main() {
         var bg = false
         for(s in 1..50) {
             map = transform(map, rules, bg)
-            if (bg) {
-                bg = rules[511] == '#'
+            bg = if (bg) {
+                rules[511] == '#'
             } else {
-                bg = rules[0] == '#'
+                rules[0] == '#'
             }
         }
 
