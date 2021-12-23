@@ -301,21 +301,23 @@ fun main() {
                 newField.hall[hallIdx] = c
                 newField.score+=(costMult * distance)
                 var s = newField.signature()
-                if (memo.containsKey(s)) {
-                    if (newField.score < memo[s]!!) {
-                        memo[s] = newField.score
-                        q.add(newField)
+                if (newField.score < bestScore) {
+                    if (memo.containsKey(s)) {
+                        if (newField.score < memo[s]!!) {
+                            memo[s] = newField.score
+                            q.add(newField)
+                        } else {
+                            continue
+                        }
                     } else {
-                        continue
+                        q.add(newField)
                     }
-                } else {
-                    q.add(newField)
                 }
             }
         }
 
         //14510
-        return 0
+        return bestScore
     }
 
 
@@ -378,15 +380,17 @@ fun main() {
                 newField.hall[hallIdx] = c
                 newField.score+=(costMult * distance)
                 var s = newField.signature()
-                if (memo.containsKey(s)) {
-                    if (newField.score < memo[s]!!) {
-                        memo[s] = newField.score
-                        q.add(newField)
+                if (newField.score < bestScore) {
+                    if (memo.containsKey(s)) {
+                        if (newField.score < memo[s]!!) {
+                            memo[s] = newField.score
+                            q.add(newField)
+                        } else {
+                            continue
+                        }
                     } else {
-                        continue
+                        q.add(newField)
                     }
-                } else {
-                    q.add(newField)
                 }
             }
         }
